@@ -1,19 +1,19 @@
 class Bookmarks {
   constructor() {
+    this.edit = this.getElement("#edit");
+    this.discard = this.getElement("#discard");
+    this.inputContainer = this.getElement("#input-container");
+    this.input = this.getElement("#input");
+    this.addEventListeners();
     this.name = "simple-tab";
     this.bookmarks = localStorage.getItem(this.name) || "";
     this.sections;
     this.columnCount = 3;
     this.groups;
     this.main = this.getElement("#main");
-    this.edit = this.getElement("#edit");
-    this.discard = this.getElement("#discard");
-    this.inputContainer = this.getElement("#input-container");
-    this.input = this.getElement("#input");
     this.columns;
     console.log(this.bookmarks);
     this.updateBookmarks();
-    this.addEventListeners();
   }
 
   updateBookmarks() {
