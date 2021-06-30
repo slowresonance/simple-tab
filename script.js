@@ -3,7 +3,9 @@ class Bookmarks {
     this.edit = this.getElement("#edit");
     this.discard = this.getElement("#discard");
     this.inputContainer = this.getElement("#input-container");
+    this.configContainer = this.getElement("#config-container");
     this.input = this.getElement("#input");
+    this.config = this.getElement("#config");
     this.addEventListeners();
     this.name = "simple-tab";
     this.bookmarks = localStorage.getItem(this.name) || "";
@@ -22,7 +24,6 @@ class Bookmarks {
       while (this.main.firstChild) {
         this.main.removeChild(this.main.lastChild);
       }
-
       this.sections = this.createSections();
       this.groups = [];
       this.parse();
@@ -38,7 +39,7 @@ class Bookmarks {
   addEventListeners() {
     this.edit.addEventListener("click", () => {
       if (this.inputContainer.classList.contains("active")) {
-        this.edit.innerHTML = "Edit";
+        this.edit.innerHTML = "Add Bookmarks";
         if (this.input.value != "" && this.input.value != this.bookmarks) {
           this.bookmarks = this.input.value;
           this.updateBookmarks();
@@ -53,9 +54,17 @@ class Bookmarks {
     });
 
     this.discard.addEventListener("click", () => {
-      this.edit.innerHTML = "Edit";
+      this.edit.innerHTML = "Add Bookmarks";
       this.inputContainer.classList.remove("active");
       this.discard.classList.remove("active");
+    });
+
+    this.config.addEventListener("click", () => {
+      if (this.configContainer.classList.contains("active")) {
+        this.configContainer.classList.remove("active");
+      } else {
+        this.configContainer.classList.add("active");
+      }
     });
   }
 

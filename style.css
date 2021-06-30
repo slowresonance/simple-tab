@@ -1,13 +1,12 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 * {
   margin: 0;
   padding: 0;
   border: none;
-  color: var(--text-color);
-  background: var(--background-color);
   font-size: 16px;
-  font-family: "Inter", sans-serif;
+  font-family: var(--sans-font);
   font-weight: 300;
 }
 
@@ -15,15 +14,17 @@ body {
   max-width: 100ch;
   margin: 5em auto;
   padding: 5ch;
+  background: var(--background-color);
 }
 
 a {
   text-decoration: none;
+  color: var(--text-color);
 }
 
 a:focus {
   outline: none;
-  color: #7ee787;
+  color: var(--highlight-color);
 }
 
 li {
@@ -48,7 +49,7 @@ section {
 
 .heading {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--heading-color);
   text-transform: uppercase;
   margin-bottom: var(--heading-margin);
@@ -59,6 +60,9 @@ section {
 @media screen and (max-width: 125ch) {
   .group {
     width: 20ch;
+  }
+  body {
+    max-width: none;
   }
 }
 
@@ -96,8 +100,8 @@ section {
   font-size: 14px;
   height: 100%;
   width: 100%;
-  font-weight: 300;
-  font-family: monospace;
+  font-weight: 500;
+  font-family: var(--monospace-font);
   color: var(--input-color);
   background: var(--input-background-color);
 }
@@ -108,13 +112,15 @@ section {
 
 #buttons {
   z-index: 1;
+  display: flex;
   position: absolute;
   bottom: 2.5em;
   right: 2.5em;
 }
 
 button {
-  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border: 1px solid var(--button-border-color);
   padding: 0.7ch 1.5ch;
   border-radius: 6px;
   background: var(--button-background-color);
@@ -141,14 +147,87 @@ button:hover {
   --input-background-color: #ffffff;
   --button-background-color: #21262d;
   --button-hover-background-color: #30363d;
+  --button-border-color: #30363d;
   --button-hover-border-color: #8b949e;
   --background-color: #0d1117;
   --border-color: #30363d;
+  --highlight-color: #12b5cb;
   --padding-heading-border: 1em;
   --heading-margin: 48px;
   --group-margin: 48px;
+  --config-input-color: #3d4853;
+  --sans-font: "Inter", sans-serif;
+  --monospace-font: "IBM Plex Mono", monospace;
+  --config-input-border-color: #e6e6e6;
+  --config-heading-color: #8b949e;
+  --config-title-heading-color: #3d4853;
 }
 
 .active {
   display: unset !important;
+}
+
+#config {
+  padding-bottom: 0.5ch;
+}
+
+#config-container {
+  z-index: 1;
+  position: absolute;
+  bottom: 5.5em;
+  right: 2.5em;
+  max-height: 40ch;
+  max-width: 37ch;
+  overflow-x: scroll;
+  margin: 0 auto;
+  border: 1px solid var(--border-color);
+  padding: 3ch;
+  display: none;
+  border-radius: 5px;
+  background: var(--input-background-color);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.input-config {
+  padding: 0.3em;
+  border: 2px solid var(--config-input-border-color);
+  font-family: var(--monospace-font);
+  font-weight: 500;
+  margin-top: 0.3em;
+  width: 15ch;
+}
+
+.config-heading {
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 500;
+  margin-top: 1em;
+  color: var(--config-heading-color);
+}
+
+.title {
+  font-weight: 700;
+  margin-bottom: 0.5em;
+  margin-top: 0;
+  color: var(--config-title-heading-color);
+}
+
+.settings {
+  width: 100%;
+  margin-bottom: 2em;
+}
+
+.config-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.config-option {
+  margin-bottom: 0.5em;
+}
+
+.settings:last-of-type {
+  margin-bottom: 0;
 }
