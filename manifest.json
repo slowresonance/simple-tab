@@ -5,5 +5,10 @@
   "chrome_url_overrides": {
     "newtab": "index.html"
   },
-  "permissions": ["storage"]
+  "permissions": ["storage"],
+  "icons": {
+    "16": "./favicons/icon16.png",
+    "48": "./favicons/icon48.png",
+    "128": "./favicons/icon128.png"
+  }
 }
