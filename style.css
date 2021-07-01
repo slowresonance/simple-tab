@@ -82,11 +82,11 @@ section {
 
 #input-container {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   bottom: 5.5em;
   right: 2.5em;
   height: 50ch;
-  width: 60ch;
+  max-width: 60ch;
   margin: 0 auto;
   border: 1px solid var(--border-color);
   padding: 2ch;
@@ -113,7 +113,7 @@ section {
 #buttons {
   z-index: 1;
   display: flex;
-  position: absolute;
+  position: fixed;
   bottom: 2.5em;
   right: 2.5em;
 }
@@ -136,7 +136,8 @@ button:hover {
   background: var(--button-hover-background-color);
 }
 
-#discard {
+#discard,
+#config-close {
   display: none;
 }
 
@@ -173,7 +174,7 @@ button:hover {
 
 #config-container {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   bottom: 5.5em;
   right: 2.5em;
   max-height: 40ch;
@@ -198,9 +199,7 @@ button:hover {
 }
 
 .config-heading {
-  text-transform: uppercase;
   font-size: 14px;
-  letter-spacing: 1px;
   font-weight: 500;
   margin-top: 1em;
   color: var(--config-heading-color);
@@ -208,6 +207,8 @@ button:hover {
 
 .title {
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 0.5em;
   margin-top: 0;
   color: var(--config-title-heading-color);
