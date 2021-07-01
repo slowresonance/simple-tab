@@ -12,14 +12,15 @@
 
 body {
   max-width: 100ch;
-  margin: 5em auto;
+  margin: 0 auto;
+  margin-top: 7.5em;
   padding: 5ch;
   background: var(--background-color);
 }
 
 a {
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--bm-text-color);
 }
 
 a:focus {
@@ -38,10 +39,6 @@ main {
   justify-content: space-around;
 }
 
-section {
-  grid-column: span 1;
-}
-
 .group {
   margin-bottom: var(--group-margin);
   width: 30ch;
@@ -50,10 +47,9 @@ section {
 .heading {
   font-size: 14px;
   font-weight: 500;
-  color: var(--heading-color);
+  color: var(--bm-heading-color);
   text-transform: uppercase;
   margin-bottom: var(--heading-margin);
-  /* border-top: 2px solid var(--border-color); */
   padding-top: var(--padding-heading-border);
 }
 
@@ -86,8 +82,10 @@ section {
   bottom: 5.5em;
   right: 2.5em;
   height: 50ch;
-  max-width: 60ch;
+
   margin: 0 auto;
+  width: 50vw;
+  max-width: 45ch;
   border: 1px solid var(--border-color);
   padding: 2ch;
   border-radius: 5px;
@@ -96,17 +94,17 @@ section {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-#input {
+#bookmarks-textarea {
   font-size: 14px;
   height: 100%;
   width: 100%;
   font-weight: 500;
   font-family: var(--monospace-font);
-  color: var(--input-color);
+  color: var(--input-border-color);
   background: var(--input-background-color);
 }
 
-#input {
+#bookmarks-textarea {
   outline: none;
 }
 
@@ -119,7 +117,7 @@ section {
 }
 
 button {
-  color: var(--text-color);
+  color: var(--bm-text-color);
   border: 1px solid var(--button-border-color);
   padding: 0.7ch 1.5ch;
   border-radius: 6px;
@@ -136,99 +134,39 @@ button:hover {
   background: var(--button-hover-background-color);
 }
 
-#discard,
-#config-close {
+#bm-close {
   display: none;
-}
-
-:root {
-  --heading-color: #3e4248;
-  --text-color: #c9d1d9;
-  --input-color: #000000;
-  --input-background-color: #ffffff;
-  --button-background-color: #21262d;
-  --button-hover-background-color: #30363d;
-  --button-border-color: #30363d;
-  --button-hover-border-color: #8b949e;
-  --background-color: #0d1117;
-  --border-color: #30363d;
-  --highlight-color: #12b5cb;
-  --padding-heading-border: 1em;
-  --heading-margin: 48px;
-  --group-margin: 48px;
-  --config-input-color: #3d4853;
-  --sans-font: "Inter", sans-serif;
-  --monospace-font: "IBM Plex Mono", monospace;
-  --config-input-border-color: #e6e6e6;
-  --config-heading-color: #8b949e;
-  --config-title-heading-color: #3d4853;
 }
 
 .active {
   display: unset !important;
 }
 
-#config {
-  padding-bottom: 0.5ch;
-}
-
-#config-container {
-  z-index: 1;
-  position: fixed;
-  bottom: 5.5em;
-  right: 2.5em;
-  max-height: 40ch;
-  max-width: 37ch;
-  overflow-x: scroll;
-  margin: 0 auto;
-  border: 1px solid var(--border-color);
-  padding: 3ch;
-  display: none;
-  border-radius: 5px;
-  background: var(--input-background-color);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
-
-.input-config {
-  padding: 0.3em;
-  border: 2px solid var(--config-input-border-color);
-  font-family: var(--monospace-font);
-  font-weight: 500;
-  margin-top: 0.3em;
-  width: 15ch;
-}
-
-.config-heading {
-  font-size: 14px;
-  font-weight: 500;
-  margin-top: 1em;
-  color: var(--config-heading-color);
-}
-
-.title {
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 0.5em;
-  margin-top: 0;
-  color: var(--config-title-heading-color);
-}
-
-.settings {
-  width: 100%;
-  margin-bottom: 2em;
-}
-
-.config-section {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-.config-option {
-  margin-bottom: 0.5em;
-}
-
-.settings:last-of-type {
-  margin-bottom: 0;
+:root {
+  /* bookmarks */
+  --sans-font: "Inter", sans-serif;
+  --monospace-font: "IBM Plex Mono", monospace;
+  --bm-text-color: #c9d1d9;
+  --bm-heading-color: #3e4248;
+  --highlight-color: #12b5cb;
+  /* input box */
+  --input-border-color: #000000;
+  --input-background-color: #ffffff;
+  /* buttons */
+  --button-text-color: #c9d1d9;
+  --button-border-color: #30363d;
+  --button-hover-border-color: #8b949e;
+  --button-background-color: #21262d;
+  --button-hover-background-color: #30363d;
+  /* containers */
+  --border-color: #30363d;
+  --background-color: #0d1117;
+  /* config */
+  --config-input-color: #3d4853;
+  --config-input-border-color: #e6e6e6;
+  --config-heading-color: #8b949e;
+  --config-title-heading-color: #3d4853;
+  --padding-heading-border: 1em;
+  --heading-margin: 48px;
+  --group-margin: 48px;
 }
