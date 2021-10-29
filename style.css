@@ -94,7 +94,7 @@ main {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-#bookmarks-textarea {
+#links-textarea {
   font-size: 14px;
   height: 100%;
   width: 100%;
@@ -102,13 +102,10 @@ main {
   font-family: var(--monospace-font);
   color: var(--input-border-color);
   background: var(--input-background-color);
-}
-
-#bookmarks-textarea {
   outline: none;
 }
 
-#buttons {
+#button-container {
   z-index: 1;
   display: flex;
   position: fixed;
@@ -134,7 +131,9 @@ button:hover {
   background: var(--button-hover-background-color);
 }
 
-#bm-close {
+#ta-close,
+#ta-edit,
+#ta-save {
   display: none;
 }
 
@@ -143,7 +142,7 @@ button:hover {
 }
 
 :root {
-  /* bookmarks */
+  /* Links */
   --sans-font: "Inter", sans-serif;
   --monospace-font: "IBM Plex Mono", monospace;
   --bm-text-color: #c9d1d9;
