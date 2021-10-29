@@ -268,8 +268,3 @@ class Controller {
 }
 
 const app = new Controller(new Model(), new View());
-
-// click on add links -> place the link text -> save the links
-// if links are changed in the model -> update the view
-// handle (view -> model)
-// on (model -> view)
