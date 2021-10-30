@@ -15,12 +15,12 @@ body {
   margin: 0 auto;
   margin-top: 7.5em;
   padding: 5ch;
-  background: var(--background-color);
+  background: var(--links-background-color);
 }
 
 a {
   text-decoration: none;
-  color: var(--bm-text-color);
+  color: var(--primary-links-color);
 }
 
 a:focus {
@@ -47,7 +47,7 @@ main {
 .heading {
   font-size: 14px;
   font-weight: 500;
-  color: var(--bm-heading-color);
+  color: var(--secondary-links-color);
   text-transform: uppercase;
   margin-bottom: var(--heading-margin);
   padding-top: var(--padding-heading-border);
@@ -90,7 +90,7 @@ main {
   padding: 2ch;
   border-radius: 5px;
   display: none;
-  background: var(--input-background-color);
+  background: var(--config-background-color);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
@@ -100,8 +100,8 @@ main {
   width: 100%;
   font-weight: 500;
   font-family: var(--monospace-font);
-  color: var(--input-border-color);
-  background: var(--input-background-color);
+  color: var(--config-color);
+  background: var(--config-background-color);
   outline: none;
 }
 
@@ -114,7 +114,7 @@ main {
 }
 
 button {
-  color: var(--bm-text-color);
+  color: var(--primary-links-color);
   border: 1px solid var(--button-border-color);
   padding: 0.7ch 1.5ch;
   border-radius: 6px;
@@ -142,30 +142,26 @@ button:hover {
 }
 
 :root {
-  /* Links */
   --sans-font: "Inter", sans-serif;
   --monospace-font: "IBM Plex Mono", monospace;
-  --bm-text-color: #c9d1d9;
-  --bm-heading-color: #3e4248;
+
+  --padding-heading-border: 1em;
+  --heading-margin: 48px;
+  --group-margin: 48px;
+
+  --primary-links-color: #c9d1d9;
+  --secondary-links-color: #3e4248;
   --highlight-color: #12b5cb;
-  /* input box */
-  --input-border-color: #000000;
-  --input-background-color: #ffffff;
-  /* buttons */
+  --config-color: #000000;
+
+  --links-background-color: #0d1117;
+  --config-background-color: #ffffff;
+
+  --border-color: #30363d;
+
   --button-text-color: #c9d1d9;
   --button-border-color: #30363d;
   --button-hover-border-color: #8b949e;
   --button-background-color: #21262d;
   --button-hover-background-color: #30363d;
-  /* containers */
-  --border-color: #30363d;
-  --background-color: #0d1117;
-  /* config */
-  --config-input-color: #3d4853;
-  --config-input-border-color: #e6e6e6;
-  --config-heading-color: #8b949e;
-  --config-title-heading-color: #3d4853;
-  --padding-heading-border: 1em;
-  --heading-margin: 48px;
-  --group-margin: 48px;
 }
