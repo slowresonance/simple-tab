@@ -18,25 +18,32 @@ body {
   background: var(--links-background-color);
 }
 
+main {
+  display: flex;
+  justify-content: space-around;
+}
+
 a {
   text-decoration: none;
   color: var(--primary-links-color);
 }
 
-a:focus {
+a:focus,
+a:hover {
   outline: none;
   color: var(--highlight-color);
+  color: #ffffff;
+  font-style: italic;
+}
+
+a:focus::before {
+  content: "~ ";
 }
 
 li {
   list-style: none;
   line-height: 18px;
   margin-bottom: 15px;
-}
-
-main {
-  display: flex;
-  justify-content: space-around;
 }
 
 .group {
@@ -76,7 +83,8 @@ main {
   }
 }
 
-#input-container {
+#input-container,
+#style-container {
   z-index: 1;
   position: fixed;
   bottom: 5.5em;
@@ -94,7 +102,8 @@ main {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
-#links-textarea {
+#links-textarea,
+#style-textarea {
   font-size: 14px;
   height: 100%;
   width: 100%;
@@ -133,7 +142,10 @@ button:hover {
 
 #ta-close,
 #ta-edit,
-#ta-save {
+#ta-save,
+#st-save,
+#st-edit,
+#st-close {
   display: none;
 }
 

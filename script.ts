@@ -12,36 +12,45 @@ type Section = {
   groups: Group[];
 };
 
+type Style = {
+  key: string;
+  value: string;
+};
+
 class Model {
   name: string;
   data: string;
+  styleString: string;
   sections: Section[];
+  styles: Style[];
   onLinksChanged: Function;
+  onStylesChanged: Function;
 
   constructor() {
     this.name = "simple-tab-2";
     this.data = localStorage.getItem(this.name) || "";
-    this.sections = this.parse(this.data);
-  }
-
-  _commit() {
-    this.onLinksChanged(this.sections, this.data);
-    localStorage.setItem(this.name, this.data);
+    this.styleString = localStorage.getItem(`${this.name}-styles`) || "";
+    this.sections = this.parseLinks(this.data);
+    this.styles = this.parseStyling(this.styleString);
   }
 
   editLinks(data: string) {
     this.data = data;
     if (this.data != "") {
-      this.sections = this.parse(this.data);
+      this.sections = this.parseLinks(this.data);
     }
-    this._commit();
+    this._commitLinks();
   }
 
-  bindLinksChanged(callback: Function) {
-    this.onLinksChanged = callback;
+  editStyle(styleString: string) {
+    this.styleString = styleString;
+    if (this.styleString != "") {
+      this.styles = this.parseStyling(this.styleString);
+    }
+    this._commitStyles();
   }
 
-  parse(data: string): Section[] {
+  parseLinks(data: string): Section[] {
     let sections: Section[] = [];
     let sectionStrings = data.split("---");
 
@@ -78,55 +87,73 @@ class Model {
 
     return sections;
   }
+
+  parseStyling(prefString: string): Style[] {
+    let styles: Style[] = [];
+    let styleString = prefString
+      .split("\n")
+      .filter((e) => e != "" && e != "\n");
+
+    styleString.forEach((style) => {
+      let key: string, value: string;
+      [key, value] = style.split(":");
+
+      styles.push({ key: key.trim(), value: value.replace(";", "").trim() });
+    });
+    return styles;
+  }
+
+  bindLinksChanged(callback: Function) {
+    this.onLinksChanged = callback;
+  }
+
+  bindStylesChanged(callback: Function) {
+    this.onStylesChanged = callback;
+  }
+
+  _commitLinks() {
+    this.onLinksChanged(this.sections, this.data);
+    localStorage.setItem(this.name, this.data);
+  }
+
+  _commitStyles() {
+    this.onStylesChanged(this.styles, this.styleString);
+    localStorage.setItem(`${this.name}-styles`, this.styleString);
+  }
 }
 
 class View {
   body: HTMLElement;
+  main: HTMLElement;
   root: HTMLElement;
   textContainer: HTMLElement;
-  textarea: HTMLElement;
+  styleContainer: HTMLElement;
+  linkarea: HTMLElement;
   buttonContainer: HTMLElement;
   taClose: HTMLElement;
   taEdit: HTMLElement;
   taSave: HTMLElement;
+  stEdit: HTMLElement;
+  stSave: HTMLElement;
+  stClose: HTMLElement;
+  stylearea: HTMLElement;
 
   constructor() {
     this.body = document.body;
-    this.root = this.createElement("main");
-    this.root.setAttribute("id", "root");
+    this.main = this.createElement("main");
+    this.main.setAttribute("id", "root");
+    this.root = document.documentElement;
     this.createUI();
 
     this._initLocalListeners();
   }
 
-  clickEdit() {
-    this.taEdit.classList.remove("active");
-    this.taClose.classList.add("active");
-    this.taSave.classList.add("active");
-    this.textContainer.classList.add("active");
-  }
-
-  clickClose() {
-    this.taEdit.classList.add("active");
-    this.taClose.classList.remove("active");
-    this.taSave.classList.remove("active");
-    this.textContainer.classList.remove("active");
-  }
-
-  clickSave() {
-    this.taEdit.classList.add("active");
-    this.taClose.classList.remove("active");
-    this.taSave.classList.remove("active");
-    this.textContainer.classList.remove("active");
-  }
-
-  bindEditLinks(handler: Function) {
-    this.taSave.addEventListener("click", (event) => {
-      event.preventDefault();
-      if (this._textarea) {
-        handler(this._textarea);
-      }
+  setStyling(styles: Style[], styleString: string) {
+    styles.forEach((style) => {
+      this.root.style.setProperty(style.key, style.value);
     });
+
+    (<HTMLTextAreaElement>this.stylearea).value = styleString;
   }
 
   displayLinks(sections: Section[], linksString: string) {
@@ -157,11 +184,11 @@ class View {
         currentGroup.appendChild(currentUL);
         currentSection.appendChild(currentGroup);
       });
-      this.root.appendChild(currentSection);
-      this.body.appendChild(this.root);
+      this.main.appendChild(currentSection);
+      this.body.appendChild(this.main);
     });
 
-    (<HTMLTextAreaElement>this.textarea).value = linksString;
+    (<HTMLTextAreaElement>this.linkarea).value = linksString;
   }
 
   createUI() {
@@ -169,13 +196,24 @@ class View {
     this.textContainer.setAttribute("id", "input-container");
     this.textContainer.setAttribute("spellcheck", "false");
 
-    this.textarea = this.createElement("textarea");
-    this.textarea.setAttribute("title", "links-input");
-    this.textarea.setAttribute("label", "links-input");
-    this.textarea.setAttribute("id", "links-textarea");
-    this.textarea.setAttribute("placeholder", "Add some links");
+    this.linkarea = this.createElement("textarea");
+    this.linkarea.setAttribute("title", "links-input");
+    this.linkarea.setAttribute("label", "links-input");
+    this.linkarea.setAttribute("id", "links-textarea");
+    this.linkarea.setAttribute("placeholder", "Add some links");
 
-    this.textContainer.appendChild(this.textarea);
+    this.styleContainer = this.createElement("div");
+    this.styleContainer.setAttribute("id", "style-container");
+    this.styleContainer.setAttribute("spellcheck", "false");
+
+    this.stylearea = this.createElement("textarea");
+    this.stylearea.setAttribute("title", "style-input");
+    this.stylearea.setAttribute("label", "style-input");
+    this.stylearea.setAttribute("id", "style-textarea");
+    this.stylearea.setAttribute("placeholder", "Edit the styling");
+
+    this.styleContainer.appendChild(this.stylearea);
+    this.textContainer.appendChild(this.linkarea);
 
     this.buttonContainer = this.createElement("div");
     this.buttonContainer.setAttribute("id", "button-container");
@@ -187,26 +225,108 @@ class View {
 
     this.taEdit = this.createElement("button");
     this.taEdit.setAttribute("id", "ta-edit");
-    this.taEdit.setAttribute("label", "Add Links");
+    this.taEdit.setAttribute("label", "Edit Links");
     this.taEdit.classList.add("active");
-    this.taEdit.innerHTML = "Add Links";
+    this.taEdit.innerHTML = "Edit Links";
 
     this.taSave = this.createElement("button");
     this.taSave.setAttribute("id", "ta-save");
     this.taSave.setAttribute("label", "Save Links");
-    this.taSave.innerHTML = "Save";
+    this.taSave.innerHTML = "Save Links";
 
-    this.buttonContainer.appendChild(this.taClose);
+    this.stClose = this.createElement("button");
+    this.stClose.setAttribute("id", "st-close");
+    this.stClose.setAttribute("label", "Close Styling");
+    this.stClose.innerHTML = "Close";
+
+    this.stEdit = this.createElement("button");
+    this.stEdit.setAttribute("id", "st-edit");
+    this.stEdit.setAttribute("label", "Edit styling");
+    this.stEdit.classList.add("active");
+    this.stEdit.innerHTML = "Edit Styling";
+
+    this.stSave = this.createElement("button");
+    this.stSave.setAttribute("id", "st-save");
+    this.stSave.setAttribute("label", "Save styling");
+    this.stSave.innerHTML = "Save Styling";
+
     this.buttonContainer.appendChild(this.taEdit);
     this.buttonContainer.appendChild(this.taSave);
+    this.buttonContainer.appendChild(this.taClose);
 
+    this.buttonContainer.appendChild(this.stEdit);
+    this.buttonContainer.appendChild(this.stSave);
+    this.buttonContainer.appendChild(this.stClose);
+
+    this.body.appendChild(this.styleContainer);
     this.body.appendChild(this.textContainer);
     this.body.appendChild(this.buttonContainer);
   }
 
+  clickLinkEdit() {
+    this.taEdit.classList.remove("active");
+    this.taClose.classList.add("active");
+    this.taSave.classList.add("active");
+    this.textContainer.classList.add("active");
+  }
+
+  clickLinkClose() {
+    this.taEdit.classList.add("active");
+    this.taClose.classList.remove("active");
+    this.taSave.classList.remove("active");
+    this.textContainer.classList.remove("active");
+  }
+
+  clickLinkSave() {
+    this.taEdit.classList.add("active");
+    this.taClose.classList.remove("active");
+    this.taSave.classList.remove("active");
+    this.textContainer.classList.remove("active");
+  }
+
+  clickStyleEdit() {
+    this.stEdit.classList.remove("active");
+    this.stSave.classList.add("active");
+    this.stClose.classList.add("active");
+    this.styleContainer.classList.add("active");
+  }
+
+  clickStyleSave() {
+    this.stEdit.classList.add("active");
+    this.stSave.classList.remove("active");
+    this.stClose.classList.remove("active");
+    this.styleContainer.classList.remove("active");
+  }
+
+  clickStyleClose() {
+    this.stEdit.classList.add("active");
+    this.stClose.classList.remove("active");
+    this.stSave.classList.remove("active");
+    this.styleContainer.classList.remove("active");
+  }
+
+  bindEditStyling(handler: Function) {
+    this.stSave.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      if (this._stylearea) {
+        handler(this._stylearea);
+      }
+    });
+  }
+
+  bindEditLinks(handler: Function) {
+    this.taSave.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (this._linkarea) {
+        handler(this._linkarea);
+      }
+    });
+  }
+
   removeLinks() {
-    while (this.root.firstChild) {
-      this.root.removeChild(this.root.firstChild);
+    while (this.main.firstChild) {
+      this.main.removeChild(this.main.firstChild);
     }
   }
 
@@ -222,24 +342,43 @@ class View {
     return element;
   }
 
-  get _textarea() {
-    return (<HTMLTextAreaElement>this.textarea).value;
+  get _linkarea() {
+    return (<HTMLTextAreaElement>this.linkarea).value;
+  }
+
+  get _stylearea() {
+    return (<HTMLTextAreaElement>this.stylearea).value;
   }
 
   _initLocalListeners() {
     this.taEdit.addEventListener("click", (event) => {
       event.preventDefault();
-      this.clickEdit();
+      this.clickLinkEdit();
     });
 
     this.taClose.addEventListener("click", (event) => {
       event.preventDefault();
-      this.clickClose();
+      this.clickLinkClose();
     });
 
     this.taSave.addEventListener("click", (event) => {
       event.preventDefault();
-      this.clickSave();
+      this.clickLinkSave();
+    });
+
+    this.stSave.addEventListener("click", (event) => {
+      event.preventDefault();
+      this.clickStyleSave();
+    });
+
+    this.stEdit.addEventListener("click", (event) => {
+      event.preventDefault();
+      this.clickStyleEdit();
+    });
+
+    this.stClose.addEventListener("click", (event) => {
+      event.preventDefault();
+      this.clickStyleClose();
     });
   }
 }
@@ -254,9 +393,20 @@ class Controller {
 
     this.model.bindLinksChanged(this.onLinksChanged);
     this.view.bindEditLinks(this.handleSaveLinks);
+    this.model.bindStylesChanged(this.onStylesChanged);
+    this.view.bindEditStyling(this.handleSaveStyle);
 
     this.onLinksChanged(this.model.sections, this.model.data);
+    this.onStylesChanged(this.model.styles, this.model.styleString);
   }
+
+  handleSaveStyle = (linkstring: string) => {
+    this.model.editStyle(linkstring);
+  };
+
+  onStylesChanged = (styles: Style[], styleString: string) => {
+    this.view.setStyling(styles, styleString);
+  };
 
   handleSaveLinks = (linkstring: string) => {
     this.model.editLinks(linkstring);
