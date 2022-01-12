@@ -1,10 +1,10 @@
-## SimpleTab v2
+# SimpleTab v2
 
 ![SimpleTabv2 Screenshot](simpletab-screenshot.png "SimpleTabv2 Screenshot")
 
 Simple Tab is a simple new tab replacement for browsers.
 
-### Adding and formatting links
+## Adding and formatting links
 
 Click on Edit Links to add/update links.
 
@@ -31,7 +31,7 @@ Syllabus(https://twitter.com/Thereisnocat_)
 2. Use `---` to seperate links into sections. A section is created by default.
 3. Use the format `link-name(link-url)` to format your links. 1 per each line.
 
-### Editing the colors
+## Editing the colors
 
 The extension uses css variables to assign colors to the elements. I will try to handle theme changes better in the next version.
 
