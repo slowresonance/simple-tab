@@ -1,6 +1,6 @@
-Simple Tab is a simple new tab replacement for browsers.
+## SimpleTab v2
 
-## How to use the extension
+Simple Tab is a simple new tab replacement for browsers.
 
 ### Adding and formatting links
 
