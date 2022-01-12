@@ -9,8 +9,7 @@ Click on Edit Links to add/update links.
 
 The following is used for the demo.
 
-`
-
+```
 > Work
 Figma(https://www.figma.com/)
 GitHub(https://github.com/mohanvpatta)
@@ -25,8 +24,7 @@ Discord(https://discord.com/app)
 > Study
 Serious Research(https://broken-idioms.com/)
 Syllabus(https://twitter.com/Thereisnocat_)
-
-`
+```
 
 1. Use `>` followed by your group name to seperate links into groups.
 2. Use `---` to seperate links into sections. A section is created by default.
