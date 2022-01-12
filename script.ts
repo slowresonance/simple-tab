@@ -27,11 +27,11 @@ class Model {
   onStylesChanged: Function;
 
   constructor() {
-    this.name = "simple-tab-2";
+    this.name = "simple-tab-v2";
     this.data = localStorage.getItem(this.name) || "";
     this.styleString = localStorage.getItem(`${this.name}-styles`) || "";
     this.sections = this.parseLinks(this.data);
-    this.styles = this.parseStyling(this.styleString);
+    this.styles = this.parseColors(this.styleString);
   }
 
   editLinks(data: string) {
@@ -45,7 +45,7 @@ class Model {
   editStyle(styleString: string) {
     this.styleString = styleString;
     if (this.styleString != "") {
-      this.styles = this.parseStyling(this.styleString);
+      this.styles = this.parseColors(this.styleString);
     }
     this._commitStyles();
   }
@@ -88,7 +88,7 @@ class Model {
     return sections;
   }
 
-  parseStyling(prefString: string): Style[] {
+  parseColors(prefString: string): Style[] {
     let styles: Style[] = [];
     let styleString = prefString
       .split("\n")
@@ -148,7 +148,7 @@ class View {
     this._initLocalListeners();
   }
 
-  setStyling(styles: Style[], styleString: string) {
+  setColors(styles: Style[], styleString: string) {
     styles.forEach((style) => {
       this.root.style.setProperty(style.key, style.value);
     });
@@ -210,7 +210,7 @@ class View {
     this.stylearea.setAttribute("title", "style-input");
     this.stylearea.setAttribute("label", "style-input");
     this.stylearea.setAttribute("id", "style-textarea");
-    this.stylearea.setAttribute("placeholder", "Edit the styling");
+    this.stylearea.setAttribute("placeholder", "Edit the colors");
 
     this.styleContainer.appendChild(this.stylearea);
     this.textContainer.appendChild(this.linkarea);
@@ -236,19 +236,19 @@ class View {
 
     this.stClose = this.createElement("button");
     this.stClose.setAttribute("id", "st-close");
-    this.stClose.setAttribute("label", "Close Styling");
+    this.stClose.setAttribute("label", "Close Colors");
     this.stClose.innerHTML = "Close";
 
     this.stEdit = this.createElement("button");
     this.stEdit.setAttribute("id", "st-edit");
-    this.stEdit.setAttribute("label", "Edit styling");
+    this.stEdit.setAttribute("label", "Edit colors");
     this.stEdit.classList.add("active");
-    this.stEdit.innerHTML = "Edit Styling";
+    this.stEdit.innerHTML = "Edit Colors";
 
     this.stSave = this.createElement("button");
     this.stSave.setAttribute("id", "st-save");
-    this.stSave.setAttribute("label", "Save styling");
-    this.stSave.innerHTML = "Save Styling";
+    this.stSave.setAttribute("label", "Save colors");
+    this.stSave.innerHTML = "Save Colors";
 
     this.buttonContainer.appendChild(this.taEdit);
     this.buttonContainer.appendChild(this.taSave);
@@ -305,7 +305,7 @@ class View {
     this.styleContainer.classList.remove("active");
   }
 
-  bindEditStyling(handler: Function) {
+  bindEditColors(handler: Function) {
     this.stSave.addEventListener("click", (event) => {
       event.preventDefault();
 
@@ -394,7 +394,7 @@ class Controller {
     this.model.bindLinksChanged(this.onLinksChanged);
     this.view.bindEditLinks(this.handleSaveLinks);
     this.model.bindStylesChanged(this.onStylesChanged);
-    this.view.bindEditStyling(this.handleSaveStyle);
+    this.view.bindEditColors(this.handleSaveStyle);
 
     this.onLinksChanged(this.model.sections, this.model.data);
     this.onStylesChanged(this.model.styles, this.model.styleString);
@@ -405,7 +405,7 @@ class Controller {
   };
 
   onStylesChanged = (styles: Style[], styleString: string) => {
-    this.view.setStyling(styles, styleString);
+    this.view.setColors(styles, styleString);
   };
 
   handleSaveLinks = (linkstring: string) => {

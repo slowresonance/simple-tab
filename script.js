@@ -1,41 +1,40 @@
-var Model = /** @class */ (function () {
-    function Model() {
-        this.name = "simple-tab-2";
+class Model {
+    constructor() {
+        this.name = "simple-tab-v2";
         this.data = localStorage.getItem(this.name) || "";
-        this.styleString = localStorage.getItem(this.name + "-styles") || "";
+        this.styleString = localStorage.getItem(`${this.name}-styles`) || "";
         this.sections = this.parseLinks(this.data);
-        this.styles = this.parseStyling(this.styleString);
+        this.styles = this.parseColors(this.styleString);
     }
-    Model.prototype.editLinks = function (data) {
+    editLinks(data) {
         this.data = data;
         if (this.data != "") {
             this.sections = this.parseLinks(this.data);
         }
         this._commitLinks();
-    };
-    Model.prototype.editStyle = function (styleString) {
+    }
+    editStyle(styleString) {
         this.styleString = styleString;
         if (this.styleString != "") {
-            this.styles = this.parseStyling(this.styleString);
+            this.styles = this.parseColors(this.styleString);
         }
         this._commitStyles();
-    };
-    Model.prototype.parseLinks = function (data) {
-        var sections = [];
-        var sectionStrings = data.split("---");
-        sectionStrings.forEach(function (sectionString) {
-            var groups = [];
-            var groupStrings = sectionString
+    }
+    parseLinks(data) {
+        let sections = [];
+        let sectionStrings = data.split("---");
+        sectionStrings.forEach((sectionString) => {
+            let groups = [];
+            let groupStrings = sectionString
                 .split(">")
-                .filter(function (e) { return e != "" && e != "\n"; });
-            groupStrings.forEach(function (groupString) {
-                var _a;
-                var lines = groupString.split("\n").filter(function (e) { return e != "" && e != "\n"; });
-                var title = "";
-                var links = [];
-                for (var i = 0; i < lines.length; i += 1) {
-                    var text = void 0, href = void 0;
-                    _a = lines[i].replace(")", "").split("("), text = _a[0], href = _a[1];
+                .filter((e) => e != "" && e != "\n");
+            groupStrings.forEach((groupString) => {
+                let lines = groupString.split("\n").filter((e) => e != "" && e != "\n");
+                let title = "";
+                let links = [];
+                for (let i = 0; i < lines.length; i += 1) {
+                    let text, href;
+                    [text, href] = lines[i].replace(")", "").split("(");
                     if (href == undefined) {
                         if (i == 0) {
                             title = text;
@@ -52,38 +51,36 @@ var Model = /** @class */ (function () {
             sections.push({ groups: groups });
         });
         return sections;
-    };
-    Model.prototype.parseStyling = function (prefString) {
-        var styles = [];
-        var styleString = prefString
+    }
+    parseColors(prefString) {
+        let styles = [];
+        let styleString = prefString
             .split("\n")
-            .filter(function (e) { return e != "" && e != "\n"; });
-        styleString.forEach(function (style) {
-            var _a;
-            var key, value;
-            _a = style.split(":"), key = _a[0], value = _a[1];
+            .filter((e) => e != "" && e != "\n");
+        styleString.forEach((style) => {
+            let key, value;
+            [key, value] = style.split(":");
             styles.push({ key: key.trim(), value: value.replace(";", "").trim() });
         });
         return styles;
-    };
-    Model.prototype.bindLinksChanged = function (callback) {
+    }
+    bindLinksChanged(callback) {
         this.onLinksChanged = callback;
-    };
-    Model.prototype.bindStylesChanged = function (callback) {
+    }
+    bindStylesChanged(callback) {
         this.onStylesChanged = callback;
-    };
-    Model.prototype._commitLinks = function () {
+    }
+    _commitLinks() {
         this.onLinksChanged(this.sections, this.data);
         localStorage.setItem(this.name, this.data);
-    };
-    Model.prototype._commitStyles = function () {
+    }
+    _commitStyles() {
         this.onStylesChanged(this.styles, this.styleString);
-        localStorage.setItem(this.name + "-styles", this.styleString);
-    };
-    return Model;
-}());
-var View = /** @class */ (function () {
-    function View() {
+        localStorage.setItem(`${this.name}-styles`, this.styleString);
+    }
+}
+class View {
+    constructor() {
         this.body = document.body;
         this.main = this.createElement("main");
         this.main.setAttribute("id", "root");
@@ -91,32 +88,30 @@ var View = /** @class */ (function () {
         this.createUI();
         this._initLocalListeners();
     }
-    View.prototype.setStyling = function (styles, styleString) {
-        var _this = this;
-        styles.forEach(function (style) {
-            _this.root.style.setProperty(style.key, style.value);
+    setColors(styles, styleString) {
+        styles.forEach((style) => {
+            this.root.style.setProperty(style.key, style.value);
         });
         this.stylearea.value = styleString;
-    };
-    View.prototype.displayLinks = function (sections, linksString) {
-        var _this = this;
+    }
+    displayLinks(sections, linksString) {
         if (!sections) {
             return;
         }
         this.removeLinks();
-        sections.forEach(function (section) {
-            var currentSection = _this.createElement("section");
-            section.groups.forEach(function (group) {
-                var currentGroup = _this.createElement("div", "group");
-                var currentTitle = _this.createElement("div", "heading");
-                var currentUL = _this.createElement("ul", "links");
+        sections.forEach((section) => {
+            let currentSection = this.createElement("section");
+            section.groups.forEach((group) => {
+                let currentGroup = this.createElement("div", "group");
+                let currentTitle = this.createElement("div", "heading");
+                let currentUL = this.createElement("ul", "links");
                 if (group.title) {
                     currentTitle.innerHTML = group.title;
                     currentGroup.appendChild(currentTitle);
                 }
-                group.links.forEach(function (link) {
-                    var currentList = _this.createElement("li");
-                    var currentLink = _this.createElement("a");
+                group.links.forEach((link) => {
+                    let currentList = this.createElement("li");
+                    let currentLink = this.createElement("a");
                     currentLink.innerHTML = link.text;
                     currentLink.setAttribute("href", link.href);
                     currentList.appendChild(currentLink);
@@ -125,12 +120,12 @@ var View = /** @class */ (function () {
                 currentGroup.appendChild(currentUL);
                 currentSection.appendChild(currentGroup);
             });
-            _this.main.appendChild(currentSection);
-            _this.body.appendChild(_this.main);
+            this.main.appendChild(currentSection);
+            this.body.appendChild(this.main);
         });
         this.linkarea.value = linksString;
-    };
-    View.prototype.createUI = function () {
+    }
+    createUI() {
         this.textContainer = this.createElement("div");
         this.textContainer.setAttribute("id", "input-container");
         this.textContainer.setAttribute("spellcheck", "false");
@@ -146,7 +141,7 @@ var View = /** @class */ (function () {
         this.stylearea.setAttribute("title", "style-input");
         this.stylearea.setAttribute("label", "style-input");
         this.stylearea.setAttribute("id", "style-textarea");
-        this.stylearea.setAttribute("placeholder", "Edit the styling");
+        this.stylearea.setAttribute("placeholder", "Edit the colors");
         this.styleContainer.appendChild(this.stylearea);
         this.textContainer.appendChild(this.linkarea);
         this.buttonContainer = this.createElement("div");
@@ -166,17 +161,17 @@ var View = /** @class */ (function () {
         this.taSave.innerHTML = "Save Links";
         this.stClose = this.createElement("button");
         this.stClose.setAttribute("id", "st-close");
-        this.stClose.setAttribute("label", "Close Styling");
+        this.stClose.setAttribute("label", "Close Colors");
         this.stClose.innerHTML = "Close";
         this.stEdit = this.createElement("button");
         this.stEdit.setAttribute("id", "st-edit");
-        this.stEdit.setAttribute("label", "Edit styling");
+        this.stEdit.setAttribute("label", "Edit colors");
         this.stEdit.classList.add("active");
-        this.stEdit.innerHTML = "Edit Styling";
+        this.stEdit.innerHTML = "Edit Colors";
         this.stSave = this.createElement("button");
         this.stSave.setAttribute("id", "st-save");
-        this.stSave.setAttribute("label", "Save styling");
-        this.stSave.innerHTML = "Save Styling";
+        this.stSave.setAttribute("label", "Save colors");
+        this.stSave.innerHTML = "Save Colors";
         this.buttonContainer.appendChild(this.taEdit);
         this.buttonContainer.appendChild(this.taSave);
         this.buttonContainer.appendChild(this.taClose);
@@ -186,143 +181,129 @@ var View = /** @class */ (function () {
         this.body.appendChild(this.styleContainer);
         this.body.appendChild(this.textContainer);
         this.body.appendChild(this.buttonContainer);
-    };
-    View.prototype.clickLinkEdit = function () {
+    }
+    clickLinkEdit() {
         this.taEdit.classList.remove("active");
         this.taClose.classList.add("active");
         this.taSave.classList.add("active");
         this.textContainer.classList.add("active");
-    };
-    View.prototype.clickLinkClose = function () {
+    }
+    clickLinkClose() {
         this.taEdit.classList.add("active");
         this.taClose.classList.remove("active");
         this.taSave.classList.remove("active");
         this.textContainer.classList.remove("active");
-    };
-    View.prototype.clickLinkSave = function () {
+    }
+    clickLinkSave() {
         this.taEdit.classList.add("active");
         this.taClose.classList.remove("active");
         this.taSave.classList.remove("active");
         this.textContainer.classList.remove("active");
-    };
-    View.prototype.clickStyleEdit = function () {
+    }
+    clickStyleEdit() {
         this.stEdit.classList.remove("active");
         this.stSave.classList.add("active");
         this.stClose.classList.add("active");
         this.styleContainer.classList.add("active");
-    };
-    View.prototype.clickStyleSave = function () {
+    }
+    clickStyleSave() {
         this.stEdit.classList.add("active");
         this.stSave.classList.remove("active");
         this.stClose.classList.remove("active");
         this.styleContainer.classList.remove("active");
-    };
-    View.prototype.clickStyleClose = function () {
+    }
+    clickStyleClose() {
         this.stEdit.classList.add("active");
         this.stClose.classList.remove("active");
         this.stSave.classList.remove("active");
         this.styleContainer.classList.remove("active");
-    };
-    View.prototype.bindEditStyling = function (handler) {
-        var _this = this;
-        this.stSave.addEventListener("click", function (event) {
+    }
+    bindEditColors(handler) {
+        this.stSave.addEventListener("click", (event) => {
             event.preventDefault();
-            if (_this._stylearea) {
-                handler(_this._stylearea);
+            if (this._stylearea) {
+                handler(this._stylearea);
             }
         });
-    };
-    View.prototype.bindEditLinks = function (handler) {
-        var _this = this;
-        this.taSave.addEventListener("click", function (event) {
+    }
+    bindEditLinks(handler) {
+        this.taSave.addEventListener("click", (event) => {
             event.preventDefault();
-            if (_this._linkarea) {
-                handler(_this._linkarea);
+            if (this._linkarea) {
+                handler(this._linkarea);
             }
         });
-    };
-    View.prototype.removeLinks = function () {
+    }
+    removeLinks() {
         while (this.main.firstChild) {
             this.main.removeChild(this.main.firstChild);
         }
-    };
-    View.prototype.createElement = function (tag, className) {
-        var element = document.createElement(tag);
+    }
+    createElement(tag, className) {
+        const element = document.createElement(tag);
         if (className)
             element.classList.add(className);
         return element;
-    };
-    View.prototype.getElement = function (selector) {
-        var element = document.querySelector(selector);
+    }
+    getElement(selector) {
+        const element = document.querySelector(selector);
         return element;
-    };
-    Object.defineProperty(View.prototype, "_linkarea", {
-        get: function () {
-            return this.linkarea.value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(View.prototype, "_stylearea", {
-        get: function () {
-            return this.stylearea.value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    View.prototype._initLocalListeners = function () {
-        var _this = this;
-        this.taEdit.addEventListener("click", function (event) {
+    }
+    get _linkarea() {
+        return this.linkarea.value;
+    }
+    get _stylearea() {
+        return this.stylearea.value;
+    }
+    _initLocalListeners() {
+        this.taEdit.addEventListener("click", (event) => {
             event.preventDefault();
-            _this.clickLinkEdit();
+            this.clickLinkEdit();
         });
-        this.taClose.addEventListener("click", function (event) {
+        this.taClose.addEventListener("click", (event) => {
             event.preventDefault();
-            _this.clickLinkClose();
+            this.clickLinkClose();
         });
-        this.taSave.addEventListener("click", function (event) {
+        this.taSave.addEventListener("click", (event) => {
             event.preventDefault();
-            _this.clickLinkSave();
+            this.clickLinkSave();
         });
-        this.stSave.addEventListener("click", function (event) {
+        this.stSave.addEventListener("click", (event) => {
             event.preventDefault();
-            _this.clickStyleSave();
+            this.clickStyleSave();
         });
-        this.stEdit.addEventListener("click", function (event) {
+        this.stEdit.addEventListener("click", (event) => {
             event.preventDefault();
-            _this.clickStyleEdit();
+            this.clickStyleEdit();
         });
-        this.stClose.addEventListener("click", function (event) {
+        this.stClose.addEventListener("click", (event) => {
             event.preventDefault();
-            _this.clickStyleClose();
+            this.clickStyleClose();
         });
-    };
-    return View;
-}());
-var Controller = /** @class */ (function () {
-    function Controller(model, view) {
-        var _this = this;
-        this.handleSaveStyle = function (linkstring) {
-            _this.model.editStyle(linkstring);
+    }
+}
+class Controller {
+    constructor(model, view) {
+        this.handleSaveStyle = (linkstring) => {
+            this.model.editStyle(linkstring);
         };
-        this.onStylesChanged = function (styles, styleString) {
-            _this.view.setStyling(styles, styleString);
+        this.onStylesChanged = (styles, styleString) => {
+            this.view.setColors(styles, styleString);
         };
-        this.handleSaveLinks = function (linkstring) {
-            _this.model.editLinks(linkstring);
+        this.handleSaveLinks = (linkstring) => {
+            this.model.editLinks(linkstring);
         };
-        this.onLinksChanged = function (links, linksString) {
-            _this.view.displayLinks(links, linksString);
+        this.onLinksChanged = (links, linksString) => {
+            this.view.displayLinks(links, linksString);
         };
         this.model = model;
         this.view = view;
         this.model.bindLinksChanged(this.onLinksChanged);
         this.view.bindEditLinks(this.handleSaveLinks);
         this.model.bindStylesChanged(this.onStylesChanged);
-        this.view.bindEditStyling(this.handleSaveStyle);
+        this.view.bindEditColors(this.handleSaveStyle);
         this.onLinksChanged(this.model.sections, this.model.data);
         this.onStylesChanged(this.model.styles, this.model.styleString);
     }
-    return Controller;
-}());
-var app = new Controller(new Model(), new View());
+}
+const app = new Controller(new Model(), new View());

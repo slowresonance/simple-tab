@@ -23,6 +23,10 @@ main {
   justify-content: space-around;
 }
 
+/* main section {
+  border-right: 1px solid #ffffff0d;
+} */
+
 a {
   text-decoration: none;
   color: var(--primary-links-color);
