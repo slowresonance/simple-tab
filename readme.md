@@ -1,8 +1,8 @@
 # SimpleTab v2
 
-![SimpleTabv2 Screenshot](simpletab-screenshot.png "SimpleTabv2 Screenshot")
-
 Simple Tab is a simple new tab replacement for browsers.
+
+![SimpleTabv2 Screenshot](simpletab-screenshot.png "SimpleTabv2 Screenshot")
 
 ## Adding and formatting links
 
