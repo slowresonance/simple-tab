@@ -1,4 +1,3 @@
-
 Simple Tab is a simple new tab replacement for browsers.
 
 ## How to use the extension
@@ -38,7 +37,7 @@ To change the defaults click on Edit Colors.
 
 These are the defaults:
 
-`
+```
 --primary-links-color: #c9d1d9;
 --secondary-links-color: #3e4248;
 --highlight-color: #12b5cb;
@@ -54,11 +53,10 @@ These are the defaults:
 --button-hover-border-color: #8b949e;
 --button-background-color: #21262d;
 --button-hover-background-color: #30363d;
-`
+```
 
 To change the colors, replace the hexcode of the variable. For example the following changes the backgorund color to red,
 
-`
+```
 --config-background-color: #ff0000;
-
-`
+```
